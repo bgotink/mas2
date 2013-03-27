@@ -1,0 +1,23 @@
+function [] = plotMap(s1,s2)
+
+global problem;
+
+[width,height] = size(problem.map);
+
+position = zeros(width,height);
+[x1,y1] = toXY(s1);
+[x2,y2]= toXY(s2);
+
+position(x1,y1)=1;
+position(x2,y2)=2;
+
+position(3,1)=0.5;
+position(3,2)=0.5;
+position(3,4)=0.5;
+position(3,5)=0.5;
+
+bar3(position,'detached','b');
+
+
+end
+

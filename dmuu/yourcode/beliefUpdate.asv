@@ -1,0 +1,34 @@
+function b1 = beliefUpdate(b,a,o)
+% Update belief b to b1 by taking action a and receiving observation o.
+% 
+% input:
+%   b   -   the current belief state.
+%   a   -   last action which was undertaken.
+%   o   -   last observation which was noticed.
+%
+% result:
+%   b1  -   the updated belief vector.
+
+global problem;
+
+ba = zeros(1,problem.nrStates);
+
+for s=1:problem.nrStates
+    
+    
+
+% 
+% b1=zeros(1,problem.nrStates);
+% 
+% for s=1:problem.nrStates
+%     addition = 0;
+%     for ss=1:problem.nrStates
+%     	addition = addition + b(ss)*problem.transition(s,ss,a);
+%     end
+%     b1(s) = problem.observation(s,a,o)*addition;
+% end
+% 
+% % normalize
+% b1 = b1./sum(b1);
+
+
