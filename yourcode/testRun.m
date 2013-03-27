@@ -8,8 +8,7 @@ function [] = testRun(N)
 %    fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
 %    fprintf('MLS: average=%f, deviation=%f\n',MLSA,MLSD);
 %    fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
-    fprintf('MMDP: average=%f, deviation=%f\n',MMDPA,MMDPD);
-    
+    fprintf('MMDP: average=%f, deviation=%f\n',MMDPA,MMDPD);  
 end
 
 

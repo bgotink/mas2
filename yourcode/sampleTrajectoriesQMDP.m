@@ -1,41 +1,42 @@
-function [nbofsteps]=sampleTrajectoriesQMDP(plot)
-% samples a trajectory through a POMDP problem with the QMDP heuristic.
+function [nbofsteps]=sampleTrajectoriesQMDP(plot,Qcalculated)
+% sample a trajectoriy through the MDP with the QMDP heuristic.
 %
 % input:
 %   plot    -   whether the progress of the robot should be plotted. 
-%               (0 = no plot / 1 = plot)
-%               (optional parameter)
+%                   (0 = no plot / 1 = plot)
+%                   (optional parameter)
+%   Q       -   you can pass a precomputed Q matrix to avoid recalculation
+%               in subsequent experiments.
+%                   (optional)
 % output:
-%   nbofsteps   -   number of steps needed to reach the final state.
-%                   (1000 steps when not converged!)
+%   nbofsteps   -   number of steps needed to converge.
+%                       (200 steps when not converged)
 
 % Initialize the problem.
 clear problem;
 initProblem;
 global problem;
+
 terminalStates= getTerminalStates;
 problem.state = sampleFromCDF(problem.startCum);
 
-Q=vi();
+% read the input arguments.
+if (nargin<2), Q=vi(); else Q=Qcalculated; end;
+
 % perform the iteration.
-for nbofsteps=1:1000
+for nbofsteps=1:200
     action = getMostProfitableAction(problem.belief,Q);
-    %x=repmat(problem.belief',1,size(Q,2));
-    %QMDP = Q.*x;
-    %action = getActionForState(QMDP,problem.state); 
     problem.state = sampleSuccessorState(problem.state,action);
     observation = sampleObservation(problem.state,action);
     problem.belief = beliefUpdate(problem.belief,action,observation);
     
-    if (nargin>0&&plot~=0)
-        plotMap(problem.state,problem.belief);
+    if (nargin>0&&plot>0) 
+        plotMap(problem.state);
+        if (plot>1),print(gcf,sprintf('step%i.png',nbofsteps),'-dpng');end;
         pause;
-    end
+	end
     
-    if (find(terminalStates==problem.state)>0)
-        fprintf('Reach goal in %i steps\n',nbofsteps);
-        break;
-    end
+    if (find(terminalStates==problem.state)>0), break; end
 end
 
 end

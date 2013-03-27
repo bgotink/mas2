@@ -7,21 +7,19 @@ function [mls] = getMostLikelyState(beliefs)
 % result:
 %   mls         -   the most likely state the robot is in.
 
-global problem;
+%global problem;
 
-% [~,mls]=max(beliefs);
-mls = -1;
-maximum = -1;
+[~,mls] = max(beliefs);
+% mls = -1;
+% maximum = -1;
+% 
+% % iterate with a random permutation through the states to break ties in
+% % states with equal probability.
+% for i = randperm(problem.nrStates)
+%     if (beliefs(i)>maximum)
+%         mls = i;
+%         maximum = beliefs(i);
+%     end
+% end
 
-% iterate with a random permutation through the states to break ties in
-% states with equal probability.
-for i = randperm(problem.nrStates)
-    if (beliefs(i)>maximum)
-        mls = i;
-        maximum = beliefs(i);
-    end
 end
-
-
-end
-

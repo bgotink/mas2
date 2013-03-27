@@ -1,4 +1,16 @@
 function [steps] = hallway2hand(plot)
+% function [steps] = hallway2hand(plot)
+%
+% the hand coded solution for the hallway2 problem. each location in the
+% hallway is assigned a distance value based on the number of steps to 
+% reach the goal. The robot is programmed to move to the next place with
+% the lowest distance to the goal (based upon the algorithm of Dijkstra)
+%
+% input:
+%   plot    -   whether the position of the robot should be plotted.
+%
+% ouput:
+%   steps   -   number of required steps to reach the goal.
     hall = [-1  8  7  6  5  4 -1;
             10  9 -1  7 -1  3  4;
             -1  8 -1  6 -1  2 -1;
@@ -28,7 +40,16 @@ function [steps] = hallway2hand(plot)
 end
 
 function [x,y] = getStartPosition(hall)
-
+% function [x,y] = getStartPosition(hall)
+% 
+% samples a starting position using rejection sampling.
+%
+% input:
+%   hall    -   matrix representing the hall.
+%
+% output:
+%   x       -   starting x coordinate for the robot.
+%   y       -   starting y coordinate for the robot.
     [m,n] = size(hall);
 
     finished = 0;

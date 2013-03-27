@@ -27,8 +27,7 @@ if (problem.useSparse)
         maximumA = repmat(max(OldQ,[],2),1,problem.nrStates);
 
         for a=1:problem.nrActions
-            temp = problem.transitionS{a}.*maximumA*problem.gamma;
-            Q(:,a) = problem.rewardS{a}+sum(temp)';
+            Q(:,a) = problem.rewardS{a}+sum(problem.transitionS{a}.*maximumA*problem.gamma)';
         end
         
         delta = max(max(abs(OldQ-Q)));
@@ -43,8 +42,7 @@ else
         maximumA = repmat(max(OldQ,[],2),1,problem.nrStates);
 
         for a=1:problem.nrActions
-            temp = problem.transition(:,:,a).*maximumA*problem.gamma;
-            Q(:,a) = sum(temp);
+            Q(:,a) = sum(problem.transition(:,:,a).*maximumA*problem.gamma);
         end
         
         Q=Q+problem.reward;

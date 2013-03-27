@@ -27,22 +27,19 @@ function [newmessagelength] = printProgress(previousLength,currentWork,maximumWo
 %   progress: 80% [++++++++++++++++++++++++++++++++        ]
 %   progress: 100% [++++++++++++++++++++++++++++++++++++++++]
 
-
 fprintf(repmat('\b',1,previousLength));
 barlength = 40.0;
-
 
 percentage= min(1,currentWork/maximumWork);
 newmessagelength = 0;
 newmessagelength = newmessagelength + fprintf('\rprogress: %g%% [',floor(100*percentage));
-
 
 nbOfPlusses = floor(barlength*percentage);
 nbOfSpaces = barlength-nbOfPlusses;
 
 fprintf(repmat('+',1,nbOfPlusses));
 fprintf(repmat(' ',1,nbOfSpaces));
-fprintf('] ');
+fprintf(']\n');
 newmessagelength=newmessagelength+barlength+2;
 
 end

@@ -138,4 +138,3 @@ function [] = leftTriangle(x, y)
 
     fill(X,Y,'black');
 end
-

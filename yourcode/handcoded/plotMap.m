@@ -3,7 +3,9 @@ function [] = plotMap(xx,yy,orientation)
 % their orientation.
 %
 % Input:
-%   states  -   1xm matrix with the states of the robots to draw.
+%   xx              -   x coordinate of the robot.
+%   yy              -   y coordinate of the robot.
+%   orientation     -   orientation for the robot
 
 
     map = [0 1 1 1 1 1 0;

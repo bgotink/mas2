@@ -24,8 +24,13 @@ problem.agentStartLocations=[1 21];
 
 initIDMG('h');
 
-problem.useSparse= 0;
+
 problem.startCum = cumsum(problem.start);
 problem.belief = ones(1,problem.nrStates)./problem.nrStates;
 
-problem.observation = createObservationModel(problem.map,problem.agentGoals,problem.nrStates,problem.nrActions);
+problem.useSparse=1;
+for a=1:problem.nrActions
+    problem.transitionS{a} = sparse(problem.transition(:,:,a));
+    problem.rewardS{a}= sparse(problem.reward(:,a));
+end
+%problem.observation = createObservationModel(problem.map,problem.agentGoals,problem.nrStates,problem.nrActions);

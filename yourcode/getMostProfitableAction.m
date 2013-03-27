@@ -10,13 +10,12 @@ function [action] = getMostProfitableAction(beliefs,Q)
 % return:
 %   action      -   the most profitable action.
 
-
 global problem;
 best=-1e6;
 action=-1;
+
 % Iterate over the actions with a random permutation to break ties from
 % actions with an equal reward.
-
 for a=randperm(problem.nrActions)
     sum = 0;  
     for s = 1:problem.nrStates

@@ -1,4 +1,4 @@
-function b1 = beliefUpdate(b,a,o)
+function b2 = beliefUpdate(b,a,o)
 % Update belief b to b1 by taking action a and receiving observation o.
 % 
 % input:
@@ -11,15 +11,17 @@ function b1 = beliefUpdate(b,a,o)
 
 global problem;
 
-b1=zeros(1,problem.nrStates);
+b2 = zeros(1,problem.nrStates);
 
-for j=1:problem.nrStates
-    addition = 0;
-    for i=1:problem.nrStates
-        addition=addition+b(i)*problem.transition(j,i,a);
+if (problem.useSparse)
+    for j=1:problem.nrStates
+        b2(j) = sum(problem.transitionS{a}(j,:).*b)*problem.observationS{a}(j,o);
     end
-    b1(j) = addition*problem.observation(j,a,o);
+else
+    for j=1:problem.nrStates     
+        b2(j) = sum(problem.transition(j,:,a).*b)*problem.observation(j,a,o);
+    end
 end
-b1 = b1./sum(b1);
+b2 = b2./sum(b2);
 
 
