@@ -24,5 +24,8 @@ problem.agentStartLocations=[1 21];
 
 initIDMG('h');
 
+problem.useSparse= 0;
 problem.startCum = cumsum(problem.start);
-problem.useSparse = 0;
+problem.belief = ones(1,problem.nrStates)./problem.nrStates;
+
+problem.observation = createObservationModel(problem.map,problem.agentGoals,problem.nrStates,problem.nrActions);

@@ -10,6 +10,7 @@ global problem;
 T = GetExampleT();
 R = GetExampleReward();
 
+problem.useSparse=0;
 problem.nrStates = 6;
 problem.nrActions = 4;
 problem.transition = T;
