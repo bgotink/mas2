@@ -1,14 +1,21 @@
-function [] = testRun(N)
-%    [MDPA,MDPD] = run(N,@sampleTrajectoriesMDP);
-%    [MLSA,MLSD] = run(N,@sampleTrajectoriesMLS);
-%    [QMDPA,QMDPD] = run(N,@sampleTrajectoriesQMDP);
-    [MMDPA,MMDPD] = run(N,@sampleTrajectoriesMMDP_puppeteer);
-    
-    
-%    fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
-%    fprintf('MLS: average=%f, deviation=%f\n',MLSA,MLSD);
-%    fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
-    fprintf('MMDP: average=%f, deviation=%f\n',MMDPA,MMDPD);  
+function [] = testRun(N,mmdp)
+
+    if (nargin < 2), mmdp=0; end;
+    if (nargin < 1), N=100; end;
+
+    if (mmdp == 0)
+        [MDPA,MDPD] = run(N,@sampleTrajectoriesMDP);
+        fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
+
+        [MLSA,MLSD] = run(N,@sampleTrajectoriesMLS);
+        fprintf('MLS: average=%f, deviation=%f\n',MLSA,MLSD);
+        
+        [QMDPA,QMDPD] = run(N,@sampleTrajectoriesQMDP);
+        fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
+    else
+        [MMDPA,MMDPD] = run(N,@sampleTrajectoriesMMDP_puppeteer);
+        fprintf('MMDP: average=%f, deviation=%f\n',MMDPA,MMDPD);  
+    end
 end
 
 
