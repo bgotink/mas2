@@ -14,13 +14,18 @@ function [] = testRun(N,mmdp)
         fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
     else
         [MMDPA,MMDPD] = run(N,@sampleTrajectoriesMMDP_puppeteer);
-        fprintf('MMDP: average=%f, deviation=%f\n',MMDPA,MMDPD);  
+        fprintf('MMDP puppeteer: average=%f, deviation=%f\n',MMDPA,MMDPD);  
+
+        [MMDPAi,MMDPDi] = runNoQ(N,@sampleTrajectoriesMMDP_independent);
+        fprintf('MMDP independent: average=%f, deviation=%f\n',MMDPAi,MMDPDi);  
+
+        [MMDPAiwc,MMDPDiwc] = runNoQ(N, @sampleTrajectoriesMMDP_independent_with_collisions);
+        fprintf('MMDP independent with collisions: average=%f, deviation=%f\n',MMDPAiwc,MMDPDiwc);  
     end
 end
 
 
 function [average,deviation] = run(N,f)
-
     l = 0;
     nbOfSteps = zeros(1,N);
 
@@ -41,8 +46,20 @@ function [average,deviation] = run(N,f)
     end
     
     average = sum(nbOfSteps)/N;
-    
     deviation = sqrt(sum((nbOfSteps-average).^2)/N);
+end
+
+function [average,deviation] = runNoQ(N,f)
+    l = 0;
+    nbOfSteps = zeros(1,N);
+
+    initProblem;
+
+    for i=1:N
+        %l = printProgress(l,i,N);
+        nbOfSteps(i)=f(0);
+    end
     
-    
+    average = sum(nbOfSteps)/N;
+    deviation = sqrt(sum((nbOfSteps-average).^2)/N);
 end
