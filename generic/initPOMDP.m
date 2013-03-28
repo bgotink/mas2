@@ -1,4 +1,4 @@
-function initPOMDP(filename)
+function initPOMDP(filename,log)
 % initPOMDP - load a POMDP problem specification
 %
 % initPOMDP(filename)
@@ -19,6 +19,10 @@ if nargin<1
   filename=sprintf('%s.POMDP',unixName);
 end
 
+if nargin<2
+  log=0;
+end
+
 if ~isfield(problem,'useSparse')
   problem.useSparse=0;
 end
@@ -26,27 +30,27 @@ end
 pomdpFile=sprintf('%s/%s.mat',getDataDir,filename);
 fid=fopen(pomdpFile,'r');
 if fid==-1
-  fprintf('initPOMDP: parsing %s',filename);
+  if(log>0),fprintf('initPOMDP: parsing %s',filename);end;
   parsePOMDP(filename,pomdpFile);
 else
   % check whether POMDP file is newer than the .mat file
   mat=dir(pomdpFile);
   pomdp=dir(filename);
   if isempty(pomdp)
-    fprintf('initPOMDP: no .POMDP file, loading %s.mat',filename);
+    if(log>0),fprintf('initPOMDP: no .POMDP file, loading %s.mat',filename);end;
     fclose(fid);
     load(pomdpFile);
   elseif datenum(pomdp.date) > datenum(mat.date)
-    fprintf('initPOMDP: re-parsing %s',filename);
+    if(log>0),fprintf('initPOMDP: re-parsing %s',filename);end;
     parsePOMDP(filename,pomdpFile);
   else
-    fprintf('initPOMDP: loading %s.mat',filename);
+    if(log>0),fprintf('initPOMDP: loading %s.mat',filename);end;
     fclose(fid);
     load(pomdpFile);
   end
 end
 
-fprintf('.\n');
+if(log>0),fprintf('.\n');end;
 
 function parsePOMDP(filename,pomdpFile)
 
