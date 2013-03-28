@@ -3,6 +3,9 @@ function directory = getDataDir
 %
 % Returns a string, defaults to '.'
 
-% $Id: getDataDir.m,v 1.4 2006/06/21 09:18:47 mtjspaan Exp $
+% Author: Matthijs Spaan
+% $Id: getDataDir.m,v 1.1 2004/07/14 09:04:51 mtjspaan Exp $
+% Copyright (c) 2003,2004 Universiteit van Amsterdam.  All rights reserved.
+% More information is in the file named COPYING.
 
 directory='.';

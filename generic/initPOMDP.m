@@ -8,15 +8,16 @@ function initPOMDP(filename,log)
 % initPOMDP call readPOMDP.m to parse the POMDP file (in Tony's POMDP
 % file format) and caches the result for faster loading in the future.
 
-% $Id: initPOMDP.m,v 1.10 2005/05/02 19:26:53 mtjspaan Exp $
+% Author: Matthijs Spaan
+% $Id: initPOMDP.m,v 1.8 2004/07/16 11:18:00 mtjspaan Exp $
+% Copyright (c) 2003,2004 Universiteit van Amsterdam.  All rights reserved.
+% More information is in the file named COPYING.
 
 global problem;
 global pomdp;
 
-unixName=getUnixName;
-
 if nargin<1
-  filename=sprintf('%s.POMDP',unixName);
+  filename=sprintf('%s.POMDP',problem.unixName);
 end
 
 if nargin<2

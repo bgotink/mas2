@@ -4,7 +4,10 @@ function resetState
 % If a start distribution is present, sample from it, otherwise sample
 % uniformly at random from all states.
 
-% $Id: resetState.m,v 1.9 2005/10/05 15:43:46 matthijs Exp $
+% Author: Matthijs Spaan
+% $Id: resetState.m,v 1.2 2004/07/13 13:59:32 mtjspaan Exp $
+% Copyright (c) 2003,2004 Universiteit van Amsterdam.  All rights reserved.
+% More information is in the file named COPYING.
 
 global problem;
 

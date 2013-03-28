@@ -12,6 +12,11 @@ problem.description='Hallway2';
 % String used for creating filenames etc.
 problem.unixName='hallway2';
 
+% Use sparse matrix computation.
+problem.useSparse=1;
+% Use a full observation model.
+problem.useSparseObs=1;
+
 % Load the (cached) .POMDP, defaults to unixName.POMDP.
 initPOMDP;
 
@@ -22,3 +27,9 @@ initProblemGeneric;
 % here.
 problem.actions=char('Stay in place','Move forward','Turn right',['Turn ' ...
                     'around'],'Turn left');
+                
+problem.rewardS = sparse(problem.reward);
+% Compute the observation CDF
+for a=1:problem.nrActions
+    problem.observationCum{a}=cumsum(problem.observationS{a});
+end
