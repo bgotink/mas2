@@ -104,3 +104,5 @@ for i = 1:nR
     T(i, Taux(i, 3), 3) = T(i, Taux(i, 3), 3) + pCorrect;
     T(i, Taux(i, 4), 4) = T(i, Taux(i, 4), 4) + pCorrect;
 end    
+
+fclose(f);
