@@ -17,7 +17,7 @@ problem.actions=char('Stay in place','Move forward','Turn right',['Turn ' ...
                     'around'],'Turn left');
 
 problem.stepReward=0;
-
+problem.useSparse = 0;
 initProblemGeneric;
 %problem.gamma=0.99;
 

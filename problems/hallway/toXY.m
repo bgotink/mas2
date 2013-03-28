@@ -9,6 +9,9 @@ elseif (state==14)
 elseif (state==13)
     x=4;
     y=2;
+elseif (state == 12)
+    x=1;
+    y=1;
 else
     x = mod(state,13)-1;
     y = floor(state/13)+1;

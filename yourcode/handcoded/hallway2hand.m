@@ -16,6 +16,10 @@ function [steps] = hallway2hand(plot)
             -1  8 -1  6 -1  2 -1;
             8   7 -1  5 -1  1  0;
             -1  6  5  4  3  2 -1];
+        
+    figure;
+    bar3(hall+1,'detached');
+    figure;
     endX = 4;
     endY = 7;    
     [x,y] = getStartPosition(hall);
@@ -26,7 +30,6 @@ function [steps] = hallway2hand(plot)
     robot.y=y;
     
     steps = 0;
-    
     
     while(robot.x~=endX||robot.y~=endY) 
         steps = steps+1;

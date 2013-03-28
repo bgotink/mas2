@@ -62,7 +62,7 @@ function pomdp = readPOMDP(filename,useSparse)
 % 
 % Matthijs Spaan <mtjspaan@science.uva.nl>
 % Copyright (c) 2003 Universiteit van Amsterdam.  All rights reserved.
-% $Id: readPOMDP.m,v 1.12 2005/03/17 10:11:24 mtjspaan Exp $
+% $Id: readPOMDP.m,v 1.11 2003/12/09 17:25:34 mtjspaan Exp $
 
 % This software or any part thereof may only be used for non-commercial  
 % or research purposes, as long as the author and University are         
@@ -163,11 +163,7 @@ for i=1:nrLines
       if strcmp('start:',file{i}(1:6))
         [s,f,t]=regexp(file{i},'([-\d\.]+)');
         [foo,d]=size(t);
-        if d==1
-          pomdp.start=zeros(1,pomdp.nrStates);
-          string=file{i};
-          pomdp.start(str2double(string(t{1}(1):t{1}(2))))=1;
-        elseif d~=pomdp.nrStates
+        if d~=pomdp.nrStates
           pomdp.start=parseNextLine(file,i+1,pomdp.nrStates,1);
         else
           pomdp.start=zeros(1,d);
