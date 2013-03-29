@@ -34,10 +34,14 @@ function [] = testRun(N,mmdp,handcoded)
         fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
         fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
         
-        [stepData,rewardData] = run(N,@sampleTrajectoriesQMDP);
+        [stepData,rewardData,unconverged,stepData2,rewardData2] = runQMDP(N);
         fprintf('QMDP:\n');
+        fprintf('Looking at only the %i converged samples:\n', (N - unconverged));
         fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
         fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
+        fprintf('Looking at all %i samples:\n', N);
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData2.average,stepData2.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData2.average,rewardData2.deviation);
     elseif (mmdp == 1)
         [PBMDPS10   ,PBMDPR10   ] = runPB(N, 10   );
         [PBMDPS100  ,PBMDPR100  ] = runPB(N, 100  );
@@ -97,6 +101,34 @@ function [stepData,rewardData] = run(N,f)
     
     stepData=analyse(nbOfSteps,N);
     rewardData=analyse(rewards,N);
+end
+
+function [stepData,rewardData,unconverged,sD2,rD2] = runQMDP(N)
+    l = 0;
+    converged = zeros(1,N);
+    nbOfsteps = zeros(1,N);
+    rewards   = zeros(1,N);
+
+    initProblem
+    Q=vi;
+
+    for i=1:N
+        l = printProgress(l,i,N);
+        [s,r,c]=sampleTrajectoriesQMDP(0,Q);
+
+        nbOfSteps(i) = s;
+        rewards(i)   = r;
+        converged(i) = c;
+    end
+
+    nbConverged=sum(converged);
+    unconverged = N - nbConverged;
+
+    stepData = analyse(nbOfSteps(converged>0), nbConverged);
+    rewardData = analyse(rewards(converged>0), nbConverged);
+
+    sD2 = analyse(nbOfSteps, N);
+    rD2 = analyse(rewards, N);
 end
 
 function [stepData,rewardData] = runNoQ(N,f)

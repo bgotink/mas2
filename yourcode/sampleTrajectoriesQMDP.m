@@ -1,4 +1,4 @@
-function [nbofsteps,dsr]=sampleTrajectoriesQMDP(plot,Qcalculated)
+function [nbofsteps,dsr,converged]=sampleTrajectoriesQMDP(plot,Qcalculated)
 % sample a trajectoriy through the MDP with the QMDP heuristic.
 %
 % input:
@@ -12,6 +12,7 @@ function [nbofsteps,dsr]=sampleTrajectoriesQMDP(plot,Qcalculated)
 %   nbofsteps   -   number of steps needed to converge.
 %                       (200 steps when not converged)
 %   dsr         -   the discounted sum of rewards
+%   converged   -   1 if the goal state was reached, 0 otherwise
 
 % Initialize the problem.
 clear problem;
@@ -19,6 +20,7 @@ initProblem;
 global problem;
 
 dsr=0;
+converged=0;
 terminalStates= getTerminalStates;
 problem.state = sampleFromCDF(problem.startCum);
 
@@ -40,7 +42,7 @@ for nbofsteps=1:200
     end
     
     dsr = dsr + getReward(problem.state,oldState,action)*problem.gamma^(nbofsteps-1);
-    if (find(terminalStates==problem.state)>0), break; end
+    if (find(terminalStates==problem.state)>0), converged=1; break; end
 end
 
 end
