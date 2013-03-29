@@ -1,23 +1,29 @@
-function [] = testRun(N,mmdp)
-% function testRun(N,mmdp)
+function [] = testRun(N,mmdp,handcoded)
+% function testRun(N,algo,handcoded)
 %
 % input:
-%       N - the number of runs, defaults to 100
-%       mmdp - what algorithms to test, defaults to 0:
+%   N          -    the number of runs, defaults to 100
+%   algo       -    what algorithms to test, defaults to 0:
 %                     0 - test standard MDP, MLS and Q_MDP
 %                     1 - test point based POMDP
 %                     2 - test MMDP
+%   handcoded   -   whether the hand coded solution should be used as well, defaults to 0, only used if algo==0
 %
 % output:
 %       none
 
+    if (nargin < 3), handcoded=0; end;
     if (nargin < 2), mmdp=0; end;
     if (nargin < 1), N=100; end;
-    if (mmdp==1 && nargin < 3), beliefSamples=10; end;
 
     if (mmdp == 0)
-        [MDPA,MDPD] = run(N,@sampleTrajectoriesMDP);
-        fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
+        if (handcoded==1)
+            [HANDA,HANDD] = run(N,@sampleTrajectoriesHandCoded);
+            fprintf('Handcoded: average=%f, deviation=%f\n',HANDA,HANDD);
+        end
+        
+        %[MDPA,MDPD] = run(N,@sampleTrajectoriesMDP);
+        %fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
 
         [MLSA,MLSD] = run(N,@sampleTrajectoriesMLS);
         fprintf('MLS: average=%f, deviation=%f\n',MLSA,MLSD);
@@ -63,9 +69,18 @@ function [average,deviation] = run(N,f)
         Q=vi;
     end
     
+    unconverged=0;
     for i=1:N
-        %l = printProgress(l,i,N);
-        nbOfSteps(i)=f(0,Q);
+       l = printProgress(l,i,N);
+       nbOfSteps(i)=f(0,Q);
+       
+       if (nbOfSteps(i)==200)
+          unconverged=unconverged+1; 
+       end
+    end
+    
+    if (unconverged>0)
+        fprintf('%i tests did not converge...\n',unconverged);
     end
     
     average = sum(nbOfSteps)/N;
@@ -78,11 +93,19 @@ function [average,deviation] = runNoQ(N,f)
 
     initProblem;
 
+    unconverged=0;
     for i=1:N
         %l = printProgress(l,i,N);
         nbOfSteps(i)=f(0);
+        if (nbOfSteps(i)==200)
+          unconverged=unconverged+1; 
+       end
     end
     
+    if (unconverged>0)
+        fprintf('%i tests did not converge...\n',unconverged);
+    end
+
     average = sum(nbOfSteps)/N;
     deviation = sqrt(sum((nbOfSteps-average).^2)/N);
 end

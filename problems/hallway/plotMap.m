@@ -1,12 +1,13 @@
-function [] = plotMap(states, beliefstate)
+function [] = plotMap(states, beliefstate,step)
 % Plots the map of the Hallway 2 problem together with the robots and
 % their orientation.
 %
 % Input:
 %   states  -   1xm matrix with the states of the robots to draw.
+
     clf;
     if (nargin > 1)
-        subplot(1,2,1);
+    	subplot(1,2,1);
     end
     
     terminalStates = getTerminalStates();
@@ -42,7 +43,6 @@ function [] = plotMap(states, beliefstate)
 
     hold on;
     for s=states
-
         [state,orientation]=splitStateOrientation(s);
         fprintf('current state: %i\n',state);
         [x,y] = toXY(state);
@@ -59,9 +59,7 @@ function [] = plotMap(states, beliefstate)
         end
     end
     hold off;
-    
-    
-    
+        
     if (nargin>1)
         subplot(1,2,2);
         [~,d]=size(beliefstate);

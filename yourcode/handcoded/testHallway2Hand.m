@@ -1,14 +1,14 @@
-function [average] = testHallway2Hand()
-
-sum = 0;
+function [average,deviation] = testHallway2Hand(N)
 
 length = 0;
-for i=1:1000
+nbOfSteps = zeros(1,N);
+
+for i=1:N
     
-    length = printProgress(length,i,1000);
-    steps = hallway2hand;
-    sum = sum+steps;
+    length = printProgress(length,i,N);
+    nbOfSteps(i) = hallway2hand;
 end
 
-average = sum/1000;
+average = sum(nbOfSteps)/N;
+deviation = sqrt(sum((nbOfSteps-average).^2)/N);
 

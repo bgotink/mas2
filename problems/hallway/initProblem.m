@@ -17,6 +17,7 @@ problem.actions=char('Stay in place','Move forward','Turn right',['Turn ' ...
                     'around'],'Turn left');
 
 problem.stepReward=0;
+problem.useSparseReward = 0;
 problem.useSparse = 0;
 problem.useSparseReward=0;
 problem.useSparseObs=0;

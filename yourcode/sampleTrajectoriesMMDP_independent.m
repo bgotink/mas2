@@ -1,4 +1,4 @@
-function [nbofsteps] = sampleTrajectoriesMMDP_independent(plot)
+function [nbofsteps,dsr] = sampleTrajectoriesMMDP_independent(plot)
 % sample a trajectory through the MMDP. each of the robots will make
 % independent decisions.
 %
@@ -10,6 +10,7 @@ function [nbofsteps] = sampleTrajectoriesMMDP_independent(plot)
 % output:
 %   nbofsteps   -   number of steps needed to converge.
 %                       (200 steps when not converged)
+%   dsr         -   the discounted sum of rewards
 
 % initialize the problem
 clear problem;
@@ -17,6 +18,7 @@ initProblem;
 global problem;
 
 % initialize the start locations
+dsr=0;
 s1 = problem.agentStartLocations(1);
 s2 = problem.agentStartLocations(2);
 
@@ -45,8 +47,9 @@ for nbofsteps=1:200
         plotMap([s1 s2]);
         if (plot>1),print(gcf,sprintf('step%i.png',nbofsteps),'-dpng');end;
         pause;
-	end
+    end
     
+    dsr = dsr + (R2(s2,a2)+R1(s1,a1))*problem.gamma^(nbofsteps-1);
     if (s1==end1&&s2==end2), break; end;
 end
 
