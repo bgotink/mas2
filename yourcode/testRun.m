@@ -31,16 +31,16 @@ function [] = testRun(N,mmdp,handcoded)
         [QMDPA,QMDPD] = run(N,@sampleTrajectoriesQMDP);
         fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
     elseif (mmdp == 1)
-        [PBMDPA10   ,PBMDPD10   ] = runPB(N, 10   );
-        [PBMDPA100  ,PBMDPD100  ] = runPB(N, 100  );
-        [PBMDPA1000 ,PBMDPD1000 ] = runPB(N, 1000 );
-        [PBMDPA10000,PBMDPD10000] = runPB(N, 10000);
+        [PBMDPS10   ,PBMDPR10   ] = runPB(N, 10   );
+        [PBMDPS100  ,PBMDPR100  ] = runPB(N, 100  );
+        [PBMDPS1000 ,PBMDPR1000 ] = runPB(N, 1000 );
+        [PBMDPS10000,PBMDPR10000] = runPB(N, 10000);
 
         fprintf('Point-based POMDP:\n');
-        fprintf('1e1 belief samples: average=%f, deviation=%f\n',PBMDPA10   ,PBMDPD10   );
-        fprintf('1e2 belief samples: average=%f, deviation=%f\n',PBMDPA100  ,PBMDPD100  );
-        fprintf('1e3 belief samples: average=%f, deviation=%f\n',PBMDPA1000 ,PBMDPD1000 );
-        fprintf('1e4 belief samples: average=%f, deviation=%f\n',PBMDPA10000,PBMDPD10000);
+        fprintf('1e1 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS10.average   , PBMDPS10.deviation   , PBMDPR10.average   , PBMDPR10.deviation   );
+        fprintf('1e2 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS100.average  , PBMDPS100.deviation  , PBMDPR100.average  , PBMDPR100.deviation  );
+        fprintf('1e3 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS1000.average , PBMDPS1000.deviation , PBMDPR1000.average , PBMDPR1000.deviation );
+        fprintf('1e4 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS10000.average, PBMDPS10000.deviation, PBMDPR10000.average, PBMDPR10000.deviation);
     else
         [MMDPA,MMDPD] = run(N,@sampleTrajectoriesMMDP_puppeteer);
         fprintf('MMDP puppeteer: average=%f, deviation=%f\n',MMDPA,MMDPD);  
@@ -110,13 +110,22 @@ function [average,deviation] = runNoQ(N,f)
     deviation = sqrt(sum((nbOfSteps-average).^2)/N);
 end
 
-function [average,deviation] = runPB(N,nbBeliefSamples)
+function [steps,discReward] = runPB(N,nbBeliefSamples)
     runvi(sampleBeliefs(nbBeliefSamples));
     global vi;
 
     R=sampleRewards(vi.V,N,1000,1);
     nbOfSteps=R(:,3)';
+    discountedReward=R(:,4)';
 
-    average = sum(nbOfSteps)/N;
-    deviation = sqrt(sum((nbOfSteps-average).^2)/N);
+    steps=struct;
+    [steps.average,steps.deviation]=analyse(nbOfSteps,N);
+
+    discReward=struct;
+    [discReward.average,discReward.deviation]=analyse(discountedReward,N);
+end
+
+function [average,deviation] = analyse(data, N)
+    average = sum(data)/N;
+    deviation = sqrt(sum((data-average).^2)/N);
 end
