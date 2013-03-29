@@ -95,10 +95,8 @@ function [stepData,rewardData] = run(N,f)
         fprintf('%i tests did not converge...\n',unconverged);
     end
     
-    stepData = struct;
-    [stepData.average,stepData.deviation]=analyse(nbOfSteps,N);
-    rewardData =struct;
-    [rewardData.average,rewardData.deviation]=analyse(rewards,N);
+    stepData=analyse(nbOfSteps,N);
+    rewardData=analyse(rewards,N);
 end
 
 function [stepData,rewardData] = runNoQ(N,f)
@@ -125,10 +123,8 @@ function [stepData,rewardData] = runNoQ(N,f)
         fprintf('%i tests did not converge...\n',unconverged);
     end
 
-    stepData = struct;
-    [stepData.average,stepData.deviation]=analyse(nbOfSteps,N);
-    rewardData =struct;
-    [rewardData.average,rewardData.deviation]=analyse(rewards,N);
+    stepData=analyse(nbOfSteps,N);
+    rewardData=analyse(rewards,N);
 end
 
 function [steps,discReward] = runPB(N,nbBeliefSamples)
@@ -139,14 +135,12 @@ function [steps,discReward] = runPB(N,nbBeliefSamples)
     nbOfSteps=R(:,3)';
     discountedReward=R(:,4)';
 
-    steps=struct;
-    [steps.average,steps.deviation]=analyse(nbOfSteps,N);
-
-    discReward=struct;
-    [discReward.average,discReward.deviation]=analyse(discountedReward,N);
+    steps=analyse(nbOfSteps,N);
+    discReward=analyse(discountedReward,N);
 end
 
-function [average,deviation] = analyse(data, N)
-    average = sum(data)/N;
-    deviation = sqrt(sum((data-average).^2)/N);
+function [a] = analyse(data, N)
+    a=struct;
+    a.average = sum(data)/N;
+    a.deviation = sqrt(sum((data-a.average).^2)/N);
 end
