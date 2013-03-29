@@ -18,18 +18,26 @@ function [] = testRun(N,mmdp,handcoded)
 
     if (mmdp == 0)
         if (handcoded==1)
-            [HANDA,HANDD] = run(N,@sampleTrajectoriesHandCoded);
-            fprintf('Handcoded: average=%f, deviation=%f\n',HANDA,HANDD);
+            [stepData,rewardData] = run(N,@sampleTrajectoriesHandCoded);
+            fprintf('Handcoded:\n');
+            fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+            fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
         end
         
-        %[MDPA,MDPD] = run(N,@sampleTrajectoriesMDP);
-        %fprintf('MDP: average=%f, deviation=%f\n',MDPA,MDPD);
+        [stepData,rewardData] = run(N,@sampleTrajectoriesMDP);
+        fprintf('MDP:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
 
-        [MLSA,MLSD] = run(N,@sampleTrajectoriesMLS);
-        fprintf('MLS: average=%f, deviation=%f\n',MLSA,MLSD);
+        [stepData,rewardData] = run(N,@sampleTrajectoriesMLS);
+        fprintf('MLS:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
         
-        [QMDPA,QMDPD] = run(N,@sampleTrajectoriesQMDP);
-        fprintf('QMDP: average=%f, deviation=%f\n',QMDPA,QMDPD);
+        [stepData,rewardData] = run(N,@sampleTrajectoriesQMDP);
+        fprintf('QMDP:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
     elseif (mmdp == 1)
         [PBMDPS10   ,PBMDPR10   ] = runPB(N, 10   );
         [PBMDPS100  ,PBMDPR100  ] = runPB(N, 100  );
@@ -42,38 +50,42 @@ function [] = testRun(N,mmdp,handcoded)
         fprintf('1e3 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS1000.average , PBMDPS1000.deviation , PBMDPR1000.average , PBMDPR1000.deviation );
         fprintf('1e4 belief samples: steps=[average=%f, deviation=%f], discountedReward=[average=%f, deviation=%f]\n', PBMDPS10000.average, PBMDPS10000.deviation, PBMDPR10000.average, PBMDPR10000.deviation);
     else
-        [MMDPA,MMDPD] = run(N,@sampleTrajectoriesMMDP_puppeteer);
-        fprintf('MMDP puppeteer: average=%f, deviation=%f\n',MMDPA,MMDPD);  
+        [stepData,rewardData] = run(N,@sampleTrajectoriesMMDP_puppeteer);
+        fprintf('MMDP puppeteer:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation); 
 
-        [MMDPAi,MMDPDi] = runNoQ(N,@sampleTrajectoriesMMDP_independent);
-        fprintf('MMDP independent: average=%f, deviation=%f\n',MMDPAi,MMDPDi);  
+        [stepData,rewardData] = runNoQ(N,@sampleTrajectoriesMMDP_independent);
+        fprintf('MMDP independent:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
 
-        [MMDPAiwc,MMDPDiwc] = runNoQ(N, @sampleTrajectoriesMMDP_independent_with_collisions);
-        fprintf('MMDP independent with collisions: average=%f, deviation=%f\n',MMDPAiwc,MMDPDiwc);  
+        [stepData,rewardData] = runNoQ(N, @sampleTrajectoriesMMDP_independent_with_collisions);
+        fprintf('MMDP independent with collisions:\n');
+        fprintf('\t number of steps => average=%f, deviation=%f\n',stepData.average,stepData.deviation);
+        fprintf('\t reward => average=%f, deviation=%f\n',rewardData.average,rewardData.deviation);
     end
 end
 
 
-function [average,deviation] = run(N,f)
+function [stepData,rewardData] = run(N,f)
     l = 0;
     nbOfSteps = zeros(1,N);
+    rewards = zeros(1,N);
 
     initProblem;
 
-    if (exist('VQstar.mat'))
-        load('VQstar.mat');
-        Q=Qstar;
-    elseif (exist('QMatrix.mat'))
-        load('QMatrix.mat');
-    else
-        Q=vi;
-    end
+    
+    Q=vi;
     
     unconverged=0;
     for i=1:N
        l = printProgress(l,i,N);
-       nbOfSteps(i)=f(0,Q);
+       [steps,r]=f(0,Q);
        
+       nbOfSteps(i)=steps;
+        rewards(i)=r;
+        
        if (nbOfSteps(i)==200)
           unconverged=unconverged+1; 
        end
@@ -83,20 +95,27 @@ function [average,deviation] = run(N,f)
         fprintf('%i tests did not converge...\n',unconverged);
     end
     
-    average = sum(nbOfSteps)/N;
-    deviation = sqrt(sum((nbOfSteps-average).^2)/N);
+    stepData = struct;
+    [stepData.average,stepData.deviation]=analyse(nbOfSteps,N);
+    rewardData =struct;
+    [rewardData.average,rewardData.deviation]=analyse(rewards,N);
 end
 
-function [average,deviation] = runNoQ(N,f)
+function [stepData,rewardData] = runNoQ(N,f)
     l = 0;
     nbOfSteps = zeros(1,N);
+    rewards = zeros(1,N);
 
     initProblem;
 
     unconverged=0;
     for i=1:N
-        %l = printProgress(l,i,N);
-        nbOfSteps(i)=f(0);
+        l = printProgress(l,i,N);
+        [steps,r]=f(0);
+        
+        nbOfSteps(i)=steps;
+        rewards(i)=r;
+        
         if (nbOfSteps(i)==200)
           unconverged=unconverged+1; 
        end
@@ -106,8 +125,10 @@ function [average,deviation] = runNoQ(N,f)
         fprintf('%i tests did not converge...\n',unconverged);
     end
 
-    average = sum(nbOfSteps)/N;
-    deviation = sqrt(sum((nbOfSteps-average).^2)/N);
+    stepData = struct;
+    [stepData.average,stepData.deviation]=analyse(nbOfSteps,N);
+    rewardData =struct;
+    [rewardData.average,rewardData.deviation]=analyse(rewards,N);
 end
 
 function [steps,discReward] = runPB(N,nbBeliefSamples)
