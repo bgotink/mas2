@@ -1,4 +1,4 @@
-function [nbofsteps] = sampleTrajectoriesMMDP_independent_with_collisions(plot)
+function [nbofsteps,dsr] = sampleTrajectoriesMMDP_independent_with_collisions(plot)
 % sample a trajectory through the MMDP. each of the robots will make
 % independent decisions.
 %
@@ -15,6 +15,8 @@ function [nbofsteps] = sampleTrajectoriesMMDP_independent_with_collisions(plot)
 clear problem;
 initProblem;
 global problem;
+
+dsr=0;
 
 % initialize the start locations
 s1 = problem.agentStartLocations(1);
@@ -48,6 +50,7 @@ for nbofsteps=1:200
         pause;
 	end
     
+    dsr = dsr + (R2(s2,a2)+R1(s1,a1))*problem.gamma^(nbofsteps-1);
     if (s1==end1&&s2==end2), break; end;
 end
 
