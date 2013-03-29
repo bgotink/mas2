@@ -21,10 +21,13 @@ dsr=0;
 terminalStates= getTerminalStates;
 problem.state = sampleFromCDF(problem.startCum);
 
-if (exist('handcodedactions.mat'))
+currentDir=dir;
+currentDirStruct = struct2cell(currentDir);
+
+if (any(ismember(currentDirStruct(1,:),'handcodedactions.mat')))
     load('handcodedactions.mat');
 else
-    error('no hand coded actions available!');
+    error('ERROR: there are no hand coded actions available for this problem! These are only created for the hallway2 problem!');
 end
 
 
@@ -32,12 +35,12 @@ end
 for nbofsteps=1:200
 	action = SA(problem.state);
     
-    if (nargin>1)
-        [~,Qaction] = max(Q(problem.state,:));
-        if (action ~= Qaction)
-            fprintf('hand coded policy prefers action %s over Q* policy action %s\n',actionToStr(action),actionToStr(Qaction));
-        end
-    end
+%     if (nargin>1)
+%         [~,Qaction] = max(Q(problem.state,:));
+%         if (action ~= Qaction)
+%             fprintf('hand coded policy prefers action %s over Q* policy action %s\n',actionToStr(action),actionToStr(Qaction));
+%         end
+%     end
     
     oldState = problem.state;
 	problem.state = sampleSuccessorState(problem.state,action);
