@@ -48,10 +48,13 @@ function [average,deviation] = run(N,f)
 
     initProblem;
 
-    if (exist('VQstar.mat'))
+    currentDir=dir;
+    currentDirStruct = struct2cell(currentDir);
+
+    if (any(ismember(currentDirStruct(1,:),'VQstar.mat')))
         load('VQstar.mat');
         Q=Qstar;
-    elseif (exist('QMatrix.mat'))
+    elseif (any(ismember(currentDirStruct(1,:),'QMatrix.mat')))
         load('QMatrix.mat');
     else
         Q=vi;
@@ -83,7 +86,7 @@ function [average,deviation] = runNoQ(N,f)
 
     unconverged=0;
     for i=1:N
-        %l = printProgress(l,i,N);
+        l = printProgress(l,i,N);
         nbOfSteps(i)=f(0);
         if (nbOfSteps(i)==200)
           unconverged=unconverged+1; 

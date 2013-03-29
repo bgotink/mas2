@@ -21,6 +21,8 @@ problem.map=[
 
 problem.agentGoals=[13 9];
 problem.agentStartLocations=[1 21];
+problem.useSparseReward=1;
+problem.useReward3=0;
 
 initIDMG('h');
 

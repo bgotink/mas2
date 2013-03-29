@@ -39,7 +39,7 @@ for nbofsteps=1:200
         pause;
     end
     
-    dsr = dsr + getReward(problem.state,oldState,action)*problem.gamma^(nbofsteps-1);
+    dsr = dsr + getReward(problem.state,oldState,a)*problem.gamma^(nbofsteps-1);
     if (s1==end1&&s2==end2),break; end
 end
 

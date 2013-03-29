@@ -15,7 +15,9 @@ problem.map=[
 0,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,0;
 0,0,45,0,46,0,47,0,0,0,0,0,48,0,49,0,0;
             ];
-
+        
+problem.useSparseReward = 1;
+problem.useReward3=0;
 problem.agentGoals=[21 29];
 problem.agentStartLocations=[29 21];
 

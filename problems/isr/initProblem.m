@@ -22,6 +22,8 @@ problem.map=[
 
 problem.agentGoals=[29 27];
 problem.agentStartLocations=[13 4];
+problem.useSparseReward=0;
+problem.useReward3=0;
 
 [problem.mapInvalidX,problem.mapInvalidY]=find(problem.map==0);
 
