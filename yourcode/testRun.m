@@ -7,10 +7,11 @@ function [] = testRun(N,mmdp,handcoded)
 %                     0 - test standard MDP, MLS and Q_MDP
 %                     1 - test point based POMDP
 %                     2 - test MMDP
-%   handcoded   -   whether the hand coded solution should be used as well, defaults to 0, only used if algo==0
+%   handcoded   -   whether the hand coded solution should be
+%                   used as well, defaults to 0, only used if algo==0
 %
 % output:
-%       none
+%       none, logs to stdout
 
     if (nargin < 3), handcoded=0; end;
     if (nargin < 2), mmdp=0; end;
@@ -160,12 +161,7 @@ function [stepData,rewardData] = runNoQ(N,f)
 end
 
 function [steps,discReward] = runPB(N,nbBeliefSamples)
-    runvi(sampleBeliefs(nbBeliefSamples));
-    global vi;
-
-    R=sampleRewards(vi.V,N,1000,1);
-    nbOfSteps=R(:,3)';
-    discountedReward=R(:,4)';
+    [nbOfSteps,discountedReward]=sampleTrajectoriesPointBased(0, 0, nbBeliefSamples, N);
 
     steps=analyse(nbOfSteps,N);
     discReward=analyse(discountedReward,N);
