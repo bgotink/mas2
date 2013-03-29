@@ -14,17 +14,17 @@ function [] = plotMap(states, beliefstate)
     terminalStates = getTerminalStates();
     XX = problem.MS(:,1);
     YY = problem.MS(:,2);
-    scatter(XX,YY,4,'b');
+    scatter(XX,YY,35,'b');
    
     hold on;
     for s = terminalStates
         [x,y] = toXY(s);
-        scatter(x,y,8,'g','fill');
+        scatter(x,y,40,'g','fill');
     end
     
     for s=states
         [x,y] = toXY(s);
-        scatter(x,y,6,'r','fill');
+        scatter(x,y,35,'r','fill');
     end
     hold off;
     

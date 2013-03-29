@@ -12,8 +12,11 @@ elseif (state==13)
 elseif (state == 12)
     x=1;
     y=1;
-else
-    x = mod(state,13)-1;
-    y = floor(state/13)+1;
+elseif (state == 1)
+    x=1;
+    y=1;
+elseif (state>0)
+    x = state-1;
+    y = 1;
 end
 

@@ -28,8 +28,8 @@ initProblemGeneric;
 problem.actions=char('Stay in place','Move forward','Turn right',['Turn ' ...
                     'around'],'Turn left');
                 
-problem.rewardS = sparse(problem.reward);
 % Compute the observation CDF
 for a=1:problem.nrActions
+    problem.rewardS{a} = problem.reward(:,a);
     problem.observationCum{a}=cumsum(problem.observationS{a});
 end

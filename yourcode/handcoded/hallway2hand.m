@@ -17,9 +17,6 @@ function [steps] = hallway2hand(plot)
             8   7 -1  5 -1  1  0;
             -1  6  5  4  3  2 -1];
         
-    figure;
-    bar3(hall+1,'detached');
-    figure;
     endX = 4;
     endY = 7;    
     [x,y] = getStartPosition(hall);
